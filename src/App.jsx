@@ -60,7 +60,6 @@ function App() {
     setListaProductos(productosActualizados);
   };
 
-  // FUNCIÓN NUEVA: Agrega un producto dinámicamente al estado global del catálogo
   const handleAgregarProducto = (nuevoProducto) => {
     setListaProductos([...listaProductos, nuevoProducto]);
   };
@@ -159,7 +158,15 @@ function App() {
 
       {vistaActual === 'cliente' ? (
         <div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px", padding: "20px", maxWidth: "1200px", margin: "0 auto" }}>
+          {/* GRILLA RESPONSIVE CON auto-fit y minmax */}
+          <div style={{ 
+            display: "grid", 
+            gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", 
+            gap: "20px", 
+            padding: "20px", 
+            maxWidth: "1200px", 
+            margin: "0 auto" 
+          }}>
             {listaProductos.map((producto) => (
               <TarjetaProducto
                 key={producto.id}
@@ -167,6 +174,7 @@ function App() {
                 precio={producto.precio}
                 stock={producto.stock}
                 detalle={producto.detalle}
+                imagen={producto.imagen}
               >
                 <ItemCount 
                   stock={producto.stock} 
@@ -238,7 +246,7 @@ function App() {
               
               <input 
                 type="password" 
-                placeholder="Contraseña (ej: tecnibruma2026)"
+                placeholder="Contraseña de administrador"
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
                 style={{ width: "100%", padding: "10px", marginBottom: "15px", borderRadius: "6px", border: "1px solid #cbd5e1", boxSizing: "border-box" }}
@@ -263,7 +271,6 @@ function App() {
                 </button>
               </div>
 
-              {/* AQUÍ ESTÁ LA CONEXIÓN CORRECTA CON AdminPrecios */}
               <AdminPrecios 
                 productos={listaProductos} 
                 onActualizarPrecio={handleActualizarPrecio} 
