@@ -23,7 +23,7 @@ const imagenesLocales = {
   'aspiradorInteligente.jpg': aspiradorInteligente,
   'instalacionCamara.jpg':instalacionCamara,
   'reparacionComputadores.jpg':reparacionComputadores,
-  'diseñoPaginas.jpg':disenoPaginas
+  'disenoPaginas.jpg':disenoPaginas
 
 
 };
