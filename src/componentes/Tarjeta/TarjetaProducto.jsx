@@ -1,25 +1,50 @@
 import { useState } from 'react';
 
+// Importa todas las imágenes utilizadas en tu data.sql:
+import camaraEzviz from '../../assets/camaraEzviz.jpg';
+import automatizacionEdificios from '../../assets/automatizacionEdificios.jpg';
+import EnchufesInteligentes from '../../assets/EnchufesInteligentes.jpg';
+import robotAspiradora1 from '../../assets/robotAspiradora1.jpg';
+import termostatoInteligente from '../../assets/termostatoInteligente.jpg';
+import aspiradorInteligente from '../../assets/aspiradorInteligente.jpg';
+import imagenDomoticaGeneral from '../../assets/imagenDomoticaGeneral.jpeg';
+import instalacionCamara from '../../assets/instalacionCamara.jpg';
+import reparacionComputadores from '../../assets/reparacionComputadores.jpg';
+import diseñoPaginas from '../../assets/diseñoPaginas.jpg';
+
+// Diccionario exacto mapeado con los nombres del data.sql
+const imagenesLocales = {
+  'imagenDomoticaGeneral.jpeg': imagenDomoticaGeneral,
+  'camaraEzviz.jpg': camaraEzviz,
+  'automatizacionEdificios.jpg': automatizacionEdificios,
+  'EnchufesInteligentes.jpg': EnchufesInteligentes,
+  'robotAspiradora1.jpg': robotAspiradora1,
+  'termostatoInteligente.jpg': termostatoInteligente,
+  'aspiradorInteligente.jpg': aspiradorInteligente,
+  'instalacionCamara.jpg':instalacionCamara,
+  'reparacionComputadores.jpg':reparacionComputadores,
+  'diseñoPaginas.jpg':diseñoPaginas
+
+
+};
+
 function TarjetaProducto({ nombre, precio, stock, detalle, imagen, children }) {
-  // Opcional: estado para girar al hacer clic (en mobile es mejor el click que el hover)
   const [isFlipped, setIsFlipped] = useState(false);
 
+  // Selecciona la imagen local del mapa, o usa camaraEzviz por defecto si no la encuentra
+  const fuenteImagen = imagenesLocales[imagen] || camaraEzviz;
+
   return (
-    <div 
-      className="card-container"
-      onClick={() => setIsFlipped(!isFlipped)} // Gira al hacer clic (ideal para celulares y compu)
-      style={{
-        perspective: "1000px",
-        width: "100%",
-        minHeight: "420px",
-        cursor: "pointer"
-      }}
-    >
-      {/* Caja que rota en 3D */}
+    <div style={{
+      perspective: "1000px",
+      width: "100%",
+      marginBottom: "20px"
+    }}>
+      {/* Caja que rota en 3D con altura fija garantizada */}
       <div style={{
         position: "relative",
         width: "100%",
-        height: "100%",
+        height: "460px",
         textAlign: "center",
         transition: "transform 0.6s",
         transformStyle: "preserve-3d",
@@ -28,7 +53,7 @@ function TarjetaProducto({ nombre, precio, stock, detalle, imagen, children }) {
         boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
       }}>
 
-        {/* ================= CARA FRONTAL (Información, precio y contador) ================= */}
+        {/* ================= CARA FRONTAL ================= */}
         <div style={{
           position: "absolute",
           width: "100%",
@@ -44,7 +69,10 @@ function TarjetaProducto({ nombre, precio, stock, detalle, imagen, children }) {
           boxSizing: "border-box"
         }}>
           <div>
-            <span style={{ fontSize: "0.75rem", backgroundColor: "#e0f2fe", color: "#0369a1", padding: "3px 8px", borderRadius: "12px", fontWeight: "bold" }}>
+            <span 
+              onClick={() => setIsFlipped(true)}
+              style={{ fontSize: "0.75rem", backgroundColor: "#e0f2fe", color: "#0369a1", padding: "4px 10px", borderRadius: "12px", fontWeight: "bold", cursor: "pointer", display: "inline-block" }}
+            >
               🔄 Click para ver imagen
             </span>
             <h3 style={{ margin: "12px 0 8px 0", color: "#1e293b", fontSize: "1.2rem" }}>{nombre}</h3>
@@ -53,14 +81,12 @@ function TarjetaProducto({ nombre, precio, stock, detalle, imagen, children }) {
             <p style={{ fontSize: "0.85rem", color: "#475569", marginBottom: "15px" }}>Stock disponible: {stock}</p>
           </div>
 
-          {/* El ItemCount o botones que le inyectamos desde App */}
-          <div onClick={(e) => e.stopPropagation()}> {/* Evita que al tocar el contador gire la tarjeta */}
+          <div>
             {children}
           </div>
         </div>
-
-
-        {/* ================= CARA TRASERA (La Imagen del Producto) ================= */}
+        
+        {/* ================= CARA TRASERA (Imagen) ================= */}
         <div style={{
           position: "absolute",
           width: "100%",
@@ -73,32 +99,40 @@ function TarjetaProducto({ nombre, precio, stock, detalle, imagen, children }) {
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          alignItem: "center",
+          alignItems: "center",
           overflow: "hidden",
           boxSizing: "border-box",
-          padding: "10px"
+          padding: "15px"
         }}>
-          <img 
-            src={imagen} 
-            alt={nombre} 
-            style={{ 
-              width: "100%", 
-              height: "100%", 
-              objectFit: "cover", 
-              borderRadius: "8px" 
-            }} 
-          />
-          <span style={{
-            position: "absolute",
-            bottom: "15px",
-            backgroundColor: "rgba(0, 0, 0, 0.7)",
-            padding: "5px 12px",
-            borderRadius: "6px",
-            fontSize: "0.8rem",
-            fontWeight: "bold"
-          }}>
+          <div style={{ width: "100%", height: "340px", display: "flex", justifyContent: "center", alignItems: "center", overflow: "hidden", borderRadius: "8px" }}>
+            <img 
+              src={fuenteImagen} 
+              alt={nombre} 
+              style={{ 
+                width: "100%", 
+                height: "100%", 
+                objectFit: "cover", 
+                borderRadius: "8px" 
+              }} 
+            />
+          </div>
+          <span 
+            onClick={() => setIsFlipped(false)}
+            style={{
+              position: "absolute",
+              bottom: "15px",
+              backgroundColor: "rgba(0, 0, 0, 0.8)",
+              color: "white",
+              padding: "6px 14px",
+              borderRadius: "6px",
+              fontSize: "0.85rem",
+              fontWeight: "bold",
+              cursor: "pointer"
+            }}
+          >
             🔄 Click para volver a detalles
           </span>
+
         </div>
 
       </div>

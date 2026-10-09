@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from './componentes/Layout/Layout';
 import CuerpoPosteo from './componentes/CuerpoPosteo/CuerpoPosteo';
 import TarjetaProducto from './componentes/Tarjeta/TarjetaProducto';
@@ -10,32 +10,29 @@ function App() {
   const [isAdminLogged, setIsAdminLogged] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
 
-  const [listaProductos, setListaProductos] = useState([
-    { 
-      id: 1, 
-      nombre: "Control de Activos RFID", 
-      precio: 1350000,
-      stock: 12, 
-      detalle: "Sistema inteligente para prevenir pérdidas de mercancía en comercios, fábricas o perfumerías mediante tecnología RFID.",
-      imagen: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=500"
-    },
-    { 
-      id: 2, 
-      nombre: "Seguridad y Domótica", 
-      precio: 1300000, 
-      stock: 8, 
-      detalle: "Integración de automatización en proyectos de seguridad perimetral y cuidado eficiente de recursos del hogar." ,
-      imagen: "https://images.unsplash.com/photo-1558002038-1055907df827?w=500"
-    },
-    { 
-      id: 3, 
-      nombre: "Monitoreo Senior Care", 
-      precio: 2300000, 
-      stock: 15, 
-      detalle: "Soluciones de asistencia y cuidado inteligente orientadas a la seguridad y tranquilidad de adultos mayores." ,
-      imagen: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500"
-    }
-  ]);
+  const [listaProductos, setListaProductos] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/api/productos')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Aseguramos que siempre sea un array aunque el backend mande otra cosa
+        if (Array.isArray(data)) {
+          setListaProductos(data);
+        } else {
+          setListaProductos([]);
+        }
+      })
+      .catch(error => {
+        console.error('Error al obtener los productos del backend:', error);
+        setListaProductos([]);
+      });
+  }, []);
 
   const [carrito, setCarrito] = useState([]);
 
@@ -61,7 +58,22 @@ function App() {
   };
 
   const handleAgregarProducto = (nuevoProducto) => {
-    setListaProductos([...listaProductos, nuevoProducto]);
+    fetch('http://localhost:8080/api/productos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(nuevoProducto),
+    })
+      .then((response) => response.json())
+      .then((productoGuardado) => {
+        setListaProductos([...listaProductos, productoGuardado]);
+        alert('¡Producto guardado y publicado con éxito en el backend!');
+      })
+      .catch((error) => {
+        console.error('Error al guardar el producto:', error);
+        alert('Hubo un error al intentar guardar el producto en el servidor.');
+      });
   };
 
   const handleAdd = (producto, cantidadElegida) => {
@@ -158,7 +170,7 @@ function App() {
 
       {vistaActual === 'cliente' ? (
         <div>
-          {/* GRILLA RESPONSIVE CON auto-fit y minmax */}
+          {/* GRILLA RESPONSIVE CON PROTECCIÓN DE ARRAY */}
           <div style={{ 
             display: "grid", 
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", 
@@ -167,21 +179,27 @@ function App() {
             maxWidth: "1200px", 
             margin: "0 auto" 
           }}>
-            {listaProductos.map((producto) => (
-              <TarjetaProducto
-                key={producto.id}
-                nombre={producto.nombre}
-                precio={producto.precio}
-                stock={producto.stock}
-                detalle={producto.detalle}
-                imagen={producto.imagen}
-              >
-                <ItemCount 
-                  stock={producto.stock} 
-                  onAdd={(cantidadElegida) => handleAdd(producto, cantidadElegida)} 
-                />
-              </TarjetaProducto>
-            ))}
+            {Array.isArray(listaProductos) && listaProductos.length > 0 ? (
+              listaProductos.map((producto) => (
+                <TarjetaProducto
+                  key={producto.id}
+                  nombre={producto.nombre}
+                  precio={producto.precio}
+                  stock={producto.stock}
+                  detalle={producto.detalle || producto.descripcion}
+                  imagen={producto.imagen}
+                >
+                  <ItemCount 
+                    stock={producto.stock} 
+                    onAdd={(cantidadElegida) => handleAdd(producto, cantidadElegida)} 
+                  />
+                </TarjetaProducto>
+              ))
+            ) : (
+              <p style={{ gridColumn: "1 / -1", textAlign: "center", color: "#666", padding: "20px" }}>
+                Cargando productos o esperando conexión con el servidor backend...
+              </p>
+            )}
           </div>
 
           <div style={{ maxWidth: "1200px", margin: "20px auto 50px auto", padding: "20px", border: "1px solid #e5e7eb", borderRadius: "12px", backgroundColor: "#fff" }}>
@@ -283,5 +301,6 @@ function App() {
     </Layout>
   );
 }
+
 
 export default App;
