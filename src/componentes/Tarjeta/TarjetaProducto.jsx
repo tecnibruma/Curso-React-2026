@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-// Importa todas las imágenes utilizadas en tu data.sql:
+// Importa todas las imágenes utilizadas:
 import camaraEzviz from '../../assets/camaraEzviz.jpg';
 import automatizacionEdificios from '../../assets/automatizacionEdificios.jpg';
 import EnchufesInteligentes from '../../assets/EnchufesInteligentes.jpg';
@@ -12,20 +12,18 @@ import instalacionCamara from '../../assets/instalacionCamara.jpg';
 import reparacionComputadores from '../../assets/reparacionComputadores.jpg';
 import disenoPaginas from '../../assets/disenoPaginas.jpg';
 
-// Diccionario exacto mapeado con los nombres del data.sql
+// Diccionario mapeado con los nombres cortos que vienen del App.jsx
 const imagenesLocales = {
-  'imagenDomoticaGeneral.jpeg': imagenDomoticaGeneral,
-  'camaraEzviz.jpg': camaraEzviz,
-  'automatizacionEdificios.jpg': automatizacionEdificios,
-  'EnchufesInteligentes.jpg': EnchufesInteligentes,
-  'robotAspiradora1.jpg': robotAspiradora1,
-  'termostatoInteligente.jpg': termostatoInteligente,
-  'aspiradorInteligente.jpg': aspiradorInteligente,
-  'instalacionCamara.jpg':instalacionCamara,
-  'reparacionComputadores.jpg':reparacionComputadores,
-  'disenoPaginas.jpg':disenoPaginas
-
-
+  'imagenDomoticaGeneral': imagenDomoticaGeneral,
+  'camaraEzviz': camaraEzviz,
+  'automatizacionEdificios': automatizacionEdificios,
+  'EnchufesInteligentes': EnchufesInteligentes,
+  'robotAspiradora1': robotAspiradora1,
+  'termostatoInteligente': termostatoInteligente,
+  'aspiradorInteligente': aspiradorInteligente,
+  'instalacionCamara': instalacionCamara,
+  'reparacionComputadores': reparacionComputadores,
+  'disenoPaginas': disenoPaginas
 };
 
 function TarjetaProducto({ nombre, precio, stock, detalle, imagen, children }) {
