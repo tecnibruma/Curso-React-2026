@@ -3,4 +3,3 @@ INSERT INTO producto (nombre, precio, stock, detalle, imagen) VALUES ('Camara de
 INSERT INTO producto (nombre, precio, stock, detalle, imagen) VALUES ('Automatizacion de edificios', 3000000, 12, 'Domotizacion completa de hogares.', 'automatizacionEdificios.jpg');
 INSERT INTO producto (nombre, precio, stock, detalle, imagen) VALUES ('Instalacion de Camaras', 80000, 15, 'Instalacion basica.', 'instalacionCamara.jpg');
 INSERT INTO producto (nombre, precio, stock, detalle, imagen) VALUES ('Reparacion de Computadores', 60000, 12, 'Software o Hardware.', 'reparacionComputadores.jpg');
-INSERT INTO producto (nombre, precio, stock, detalle, imagen) VALUES ('Diseño de aplicaciones a medidas', 40, 12, 'Diseño de aplicaciones y soluciones automatizadas.', 'disenoPaginas.jpg');

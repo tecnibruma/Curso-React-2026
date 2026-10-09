@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Layout from './componentes/Layout/Layout';
 import CuerpoPosteo from './componentes/CuerpoPosteo/CuerpoPosteo';
 import TarjetaProducto from './componentes/Tarjeta/TarjetaProducto';
@@ -10,29 +10,57 @@ function App() {
   const [isAdminLogged, setIsAdminLogged] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
 
-  const [listaProductos, setListaProductos] = useState([]);
-
-  useEffect(() => {
-    fetch('http://localhost:8080/api/productos')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error en la respuesta del servidor');
-        }
-        return response.json();
-      })
-      .then(data => {
-        // Aseguramos que siempre sea un array aunque el backend mande otra cosa
-        if (Array.isArray(data)) {
-          setListaProductos(data);
-        } else {
-          setListaProductos([]);
-        }
-      })
-      .catch(error => {
-        console.error('Error al obtener los productos del backend:', error);
-        setListaProductos([]);
-      });
-  }, []);
+  // Lista de productos estática optimizada para Vercel
+  const [listaProductos, setListaProductos] = useState([
+    {
+      id: 1,
+      nombre: "Kit Inteligente",
+      precio: 45000,
+      stock: 10,
+      detalle: "Sistema completo de automatización para hogares con control remoto vía app.",
+      imagen: "automatizacionEdificios"
+    },
+    {
+      id: 2,
+      nombre: "Central Domótica",
+      precio: 65000,
+      stock: 5,
+      detalle: "Central inteligente para gestión centralizada de dispositivos domóticos.",
+      imagen: "imagenDomoticaGeneral"
+    },
+    {
+      id: 3,
+      nombre: "Cámara Ezviz",
+      precio: 32000,
+      stock: 8,
+      detalle: "Cámara de seguridad Wi-Fi con visión nocturna y detección de movimiento.",
+      imagen: "camaraEzviz"
+    },
+    {
+      id: 4,
+      nombre: "Instalación de Cámara",
+      precio: 15000,
+      stock: 20,
+      detalle: "Servicio profesional de instalación y configuración de cámaras de seguridad.",
+      imagen: "instalacionCamara"
+    },
+    {
+      id: 5,
+      nombre: "Reparación de Computadores",
+      precio: 20000,
+      stock: 15,
+      detalle: "Diagnóstico, reemplazo de componentes y optimización de equipos informáticos.",
+      imagen: "reparacionComputadores"
+    },
+    {
+      id: 6,
+      nombre: "Diseño de Páginas Web",
+      precio: 90000,
+      stock: 12,
+      detalle: "Desarrollo de sitios web profesionales, modernos y adaptados a dispositivos móviles.",
+      imagen: "disenoPaginas"
+    }
+  ]);
 
   const [carrito, setCarrito] = useState([]);
 
@@ -58,22 +86,13 @@ function App() {
   };
 
   const handleAgregarProducto = (nuevoProducto) => {
-    fetch('http://localhost:8080/api/productos', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(nuevoProducto),
-    })
-      .then((response) => response.json())
-      .then((productoGuardado) => {
-        setListaProductos([...listaProductos, productoGuardado]);
-        alert('¡Producto guardado y publicado con éxito en el backend!');
-      })
-      .catch((error) => {
-        console.error('Error al guardar el producto:', error);
-        alert('Hubo un error al intentar guardar el producto en el servidor.');
-      });
+    const productoConId = {
+      ...nuevoProducto,
+      id: Date.now(),
+      stock: nuevoProducto.stock || 5
+    };
+    setListaProductos([...listaProductos, productoConId]);
+    alert('¡Producto guardado y publicado con éxito en el catálogo local!');
   };
 
   const handleAdd = (producto, cantidadElegida) => {
@@ -170,7 +189,7 @@ function App() {
 
       {vistaActual === 'cliente' ? (
         <div>
-          {/* GRILLA RESPONSIVE CON PROTECCIÓN DE ARRAY */}
+          {/* GRILLA RESPONSIVE */}
           <div style={{ 
             display: "grid", 
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", 
@@ -197,7 +216,7 @@ function App() {
               ))
             ) : (
               <p style={{ gridColumn: "1 / -1", textAlign: "center", color: "#666", padding: "20px" }}>
-                Cargando productos o esperando conexión con el servidor backend...
+                No hay productos disponibles en este momento.
               </p>
             )}
           </div>
@@ -301,6 +320,5 @@ function App() {
     </Layout>
   );
 }
-
 
 export default App;
