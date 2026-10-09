@@ -10,7 +10,7 @@ import aspiradorInteligente from '../../assets/aspiradorInteligente.jpg';
 import imagenDomoticaGeneral from '../../assets/imagenDomoticaGeneral.jpeg';
 import instalacionCamara from '../../assets/instalacionCamara.jpg';
 import reparacionComputadores from '../../assets/reparacionComputadores.jpg';
-import diseñoPaginas from '../../assets/diseñoPaginas.jpg';
+import disenoPaginas from '../../assets/disenoPaginas.jpg';
 
 // Diccionario exacto mapeado con los nombres del data.sql
 const imagenesLocales = {
@@ -23,7 +23,7 @@ const imagenesLocales = {
   'aspiradorInteligente.jpg': aspiradorInteligente,
   'instalacionCamara.jpg':instalacionCamara,
   'reparacionComputadores.jpg':reparacionComputadores,
-  'diseñoPaginas.jpg':diseñoPaginas
+  'diseñoPaginas.jpg':disenoPaginas
 
 
 };
