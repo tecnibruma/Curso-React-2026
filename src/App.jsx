@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Layout from './componentes/Layout/Layout';
 import CuerpoPosteo from './componentes/CuerpoPosteo/CuerpoPosteo';
 import TarjetaProducto from './componentes/Tarjeta/TarjetaProducto';
@@ -10,57 +10,20 @@ function App() {
   const [isAdminLogged, setIsAdminLogged] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
 
-  // Lista de productos estática optimizada para Vercel
-  const [listaProductos, setListaProductos] = useState([
-    {
-      id: 1,
-      nombre: "Kit Inteligente",
-      precio: 45000,
-      stock: 10,
-      detalle: "Sistema completo de automatización para hogares con control remoto vía app.",
-      imagen: "automatizacionEdificios"
-    },
-    {
-      id: 2,
-      nombre: "Central Domótica",
-      precio: 65000,
-      stock: 5,
-      detalle: "Central inteligente para gestión centralizada de dispositivos domóticos.",
-      imagen: "imagenDomoticaGeneral"
-    },
-    {
-      id: 3,
-      nombre: "Cámara Ezviz",
-      precio: 32000,
-      stock: 8,
-      detalle: "Cámara de seguridad Wi-Fi con visión nocturna y detección de movimiento.",
-      imagen: "camaraEzviz"
-    },
-    {
-      id: 4,
-      nombre: "Instalación de Cámara",
-      precio: 15000,
-      stock: 20,
-      detalle: "Servicio profesional de instalación y configuración de cámaras de seguridad.",
-      imagen: "instalacionCamara"
-    },
-    {
-      id: 5,
-      nombre: "Reparación de Computadores",
-      precio: 20000,
-      stock: 15,
-      detalle: "Diagnóstico, reemplazo de componentes y optimización de equipos informáticos.",
-      imagen: "reparacionComputadores"
-    },
-    {
-      id: 6,
-      nombre: "Diseño de Páginas Web",
-      precio: 90000,
-      stock: 12,
-      detalle: "Desarrollo de sitios web profesionales, modernos y adaptados a dispositivos móviles.",
-      imagen: "disenoPaginas"
-    }
-  ]);
+  // Lista de productos cargada dinámicamente desde el backend en Render
+  const [listaProductos, setListaProductos] = useState([]);
+
+  // Consultar los productos a la API al cargar la aplicación
+  useEffect(() => {
+    fetch('https://backend-ecommercetecnibruma.onrender.com/api/productos')
+      .then((res) => res.json())
+      .then((data) => {
+        setListaProductos(data);
+      })
+      .catch((error) => {
+        console.error('Error al cargar los productos:', error);
+      });
+  }, []);
 
   const [carrito, setCarrito] = useState([]);
 
@@ -92,7 +55,7 @@ function App() {
       stock: nuevoProducto.stock || 5
     };
     setListaProductos([...listaProductos, productoConId]);
-    alert('¡Producto guardado y publicado con éxito en el catálogo local!');
+    alert('¡Producto guardado y publicado con éxito en el catálogo!');
   };
 
   const handleAdd = (producto, cantidadElegida) => {
@@ -279,7 +242,7 @@ function App() {
           {!isAdminLogged ? (
             <form onSubmit={handleLogin}>
               <h2>🔐 Área Restringida</h2>
-              <p style={{ color: "#666", marginBottom: "20px", fontSize: "0.9rem" }}>Ingrese la clave de administrador de TecniBruma para gestionar precios.</p>
+              <p style={{ color: "#666", marginBottom: "20px", fontSize: "0.9rem" }}>Ingrese la clave de administrador para gestionar precios.</p>
               
               <input 
                 type="password" 
