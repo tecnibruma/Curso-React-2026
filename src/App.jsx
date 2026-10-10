@@ -58,6 +58,13 @@ function App() {
     alert('¡Producto guardado y publicado con éxito en el catálogo!');
   };
 
+  // Función para eliminar un producto del catálogo local
+  const handleEliminarProducto = (id) => {
+    const productosFiltrados = listaProductos.filter((prod) => prod.id !== id);
+    setListaProductos(productosFiltrados);
+    alert('¡Producto eliminado del catálogo con éxito!');
+  };
+
   const handleAdd = (producto, cantidadElegida) => {
     const productoExistenteIndex = carrito.findIndex((item) => item.id === producto.id);
 
@@ -275,6 +282,7 @@ function App() {
                 productos={listaProductos} 
                 onActualizarPrecio={handleActualizarPrecio} 
                 onAgregarProducto={handleAgregarProducto}
+                onEliminarProducto={handleEliminarProducto}
               />
             </div>
           )}

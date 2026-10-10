@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto }) {
+function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto, onEliminarProducto }) {
   const [preciosEditados, setPreciosEditados] = useState({});
   
   // Estados para el formulario de nuevo producto
@@ -38,7 +38,7 @@ function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto }) {
       precio: Number(nuevoPrecio),
       stock: Number(nuevoStock),
       detalle: nuevoDetalle || "Sin detalles especificados.",
-      imagen: nuevaImagen || "https://via.placeholder.com/300" // URL de imagen o una por defecto si se deja vacío
+      imagen: nuevaImagen || "camaraEzviz.jpg" // Imagen por defecto si se deja vacío
     };
 
     onAgregarProducto(productoParaAgregar);
@@ -85,10 +85,10 @@ function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto }) {
             style={{ padding: "8px", borderRadius: "4px", border: "1px solid #cbd5e1" }}
           />
 
-          {/* AQUÍ COLOCAMOS EL CAMPO DE TEXTO PARA LA URL DE LA IMAGEN */}
+          {/* CAMPO DE TEXTO PARA EL NOMBRE DE LA IMAGEN EN PUBLIC */}
           <input 
             type="text" 
-            placeholder="URL de la imagen (ej: https://...)" 
+            placeholder="Nombre de imagen (ej: camaraEzviz.jpg)" 
             value={nuevaImagen}
             onChange={(e) => setNuevaImagen(e.target.value)}
             style={{ padding: "8px", borderRadius: "4px", border: "1px solid #cbd5e1" }}
@@ -112,7 +112,7 @@ function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto }) {
 
       <hr style={{ margin: "20px 0" }} />
 
-      <h3>✏️ Modificar Precios Existentes</h3>
+      <h3>✏️ Modificar Precios o Eliminar Productos</h3>
       {productos.map((prod) => (
         <div key={prod.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #e2e8f0" }}>
           <div>
@@ -133,6 +133,17 @@ function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto }) {
               style={{ backgroundColor: "#2563eb", color: "white", border: "none", padding: "7px 14px", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}
             >
               Actualizar
+            </button>
+            <button 
+              onClick={() => {
+                if (window.confirm(`¿Estás seguro de eliminar "${prod.nombre}"?`)) {
+                  onEliminarProducto(prod.id);
+                }
+              }}
+              style={{ backgroundColor: "#ef4444", color: "white", border: "none", padding: "7px 12px", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}
+              title="Eliminar producto"
+            >
+              🗑️
             </button>
           </div>
         </div>
