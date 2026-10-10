@@ -1,36 +1,11 @@
 import { useState } from 'react';
 
-// Importa todas las imágenes utilizadas:
-import camaraEzviz from '../../assets/camaraEzviz.jpg';
-import automatizacionEdificios from '../../assets/automatizacionEdificios.jpg';
-import EnchufesInteligentes from '../../assets/EnchufesInteligentes.jpg';
-import robotAspiradora1 from '../../assets/robotAspiradora1.jpg';
-import termostatoInteligente from '../../assets/termostatoInteligente.jpg';
-import aspiradorInteligente from '../../assets/aspiradorInteligente.jpg';
-import imagenDomoticaGeneral from '../../assets/imagenDomoticaGeneral.jpeg';
-import instalacionCamara from '../../assets/instalacionCamara.jpg';
-import reparacionComputadores from '../../assets/reparacionComputadores.jpg';
-import disenoPaginas from '../../assets/disenoPaginas.jpg';
-
-// Diccionario mapeado con los nombres cortos que vienen del App.jsx
-const imagenesLocales = {
-  'imagenDomoticaGeneral': imagenDomoticaGeneral,
-  'camaraEzviz': camaraEzviz,
-  'automatizacionEdificios': automatizacionEdificios,
-  'EnchufesInteligentes': EnchufesInteligentes,
-  'robotAspiradora1': robotAspiradora1,
-  'termostatoInteligente': termostatoInteligente,
-  'aspiradorInteligente': aspiradorInteligente,
-  'instalacionCamara': instalacionCamara,
-  'reparacionComputadores': reparacionComputadores,
-  'disenoPaginas': disenoPaginas
-};
-
 function TarjetaProducto({ nombre, precio, stock, detalle, imagen, children }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Selecciona la imagen local del mapa, o usa camaraEzviz por defecto si no la encuentra
-  const fuenteImagen = imagenesLocales[imagen] || camaraEzviz;
+  // Si la imagen viene definida, la busca directo desde la raíz pública; si no, usa una por defecto
+  const nombreImagenLimpia = imagen ? imagen.trim() : 'camaraEzviz.jpg';
+  const fuenteImagen = `/${nombreImagenLimpia}`;
 
   return (
     <div style={{
