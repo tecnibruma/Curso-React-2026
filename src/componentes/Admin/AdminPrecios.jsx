@@ -8,7 +8,7 @@ function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto, onElim
   const [nuevoPrecio, setNuevoPrecio] = useState('');
   const [nuevoStock, setNuevoStock] = useState('');
   const [nuevoDetalle, setNuevoDetalle] = useState('');
-  const [nuevaImagen, setNuevaImagen] = useState(''); // Estado para la URL de la imagen
+  const [nuevaImagen, setNuevaImagen] = useState('');
 
   const handleInputChange = (id, valor) => {
     setPreciosEditados({ ...preciosEditados, [id]: valor });
@@ -24,7 +24,6 @@ function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto, onElim
     }
   };
 
-  // Manejador para enviar el formulario de producto nuevo
   const handleSubmitNuevo = (e) => {
     e.preventDefault();
     if (!nuevoNombre || !nuevoPrecio || !nuevoStock) {
@@ -33,23 +32,21 @@ function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto, onElim
     }
 
     const productoParaAgregar = {
-      id: Date.now(), // Genera un ID único basado en el tiempo actual
+      id: Date.now(),
       nombre: nuevoNombre,
       precio: Number(nuevoPrecio),
       stock: Number(nuevoStock),
       detalle: nuevoDetalle || "Sin detalles especificados.",
-      imagen: nuevaImagen || "camaraEzviz.jpg" // Imagen por defecto si se deja vacío
+      imagen: nuevaImagen || "camaraEzviz.jpg"
     };
 
     onAgregarProducto(productoParaAgregar);
 
-    // Limpiamos el formulario y la imagen
     setNuevoNombre('');
     setNuevoPrecio('');
     setNuevoStock('');
     setNuevoDetalle('');
     setNuevaImagen('');
-    alert("¡Nuevo producto agregado al catálogo con éxito!");
   };
 
   return (
@@ -85,7 +82,6 @@ function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto, onElim
             style={{ padding: "8px", borderRadius: "4px", border: "1px solid #cbd5e1" }}
           />
 
-          {/* CAMPO DE TEXTO PARA EL NOMBRE DE LA IMAGEN EN PUBLIC */}
           <input 
             type="text" 
             placeholder="Nombre de imagen (ej: camaraEzviz.jpg)" 
@@ -113,41 +109,47 @@ function AdminPrecios({ productos, onActualizarPrecio, onAgregarProducto, onElim
       <hr style={{ margin: "20px 0" }} />
 
       <h3>✏️ Modificar Precios o Eliminar Productos</h3>
-      {productos.map((prod) => (
-        <div key={prod.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #e2e8f0" }}>
-          <div>
-            <strong>{prod.nombre}</strong>
-            <span style={{ display: "block", fontSize: "0.9rem", color: "#666" }}>Precio actual: ${prod.precio}</span>
-          </div>
+      
+      {/* VALIDACIÓN DE PRODUCTOS */}
+      {Array.isArray(productos) && productos.length > 0 ? (
+        productos.map((prod) => (
+          <div key={prod.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #e2e8f0" }}>
+            <div style={{ textAlign: "left" }}>
+              <strong>{prod.nombre}</strong>
+              <span style={{ display: "block", fontSize: "0.9rem", color: "#666" }}>Precio actual: ${prod.precio}</span>
+            </div>
 
-          <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-            <input 
-              type="number" 
-              placeholder="Nuevo precio"
-              defaultValue={prod.precio}
-              onChange={(e) => handleInputChange(prod.id, e.target.value)}
-              style={{ padding: "6px", width: "110px", borderRadius: "4px", border: "1px solid #cbd5e1" }}
-            />
-            <button 
-              onClick={() => handleGuardarPrecio(prod.id)}
-              style={{ backgroundColor: "#2563eb", color: "white", border: "none", padding: "7px 14px", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}
-            >
-              Actualizar
-            </button>
-            <button 
-              onClick={() => {
-                if (window.confirm(`¿Estás seguro de eliminar "${prod.nombre}"?`)) {
-                  onEliminarProducto(prod.id);
-                }
-              }}
-              style={{ backgroundColor: "#ef4444", color: "white", border: "none", padding: "7px 12px", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}
-              title="Eliminar producto"
-            >
-              🗑️
-            </button>
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <input 
+                type="number" 
+                placeholder="Nuevo precio"
+                defaultValue={prod.precio}
+                onChange={(e) => handleInputChange(prod.id, e.target.value)}
+                style={{ padding: "6px", width: "110px", borderRadius: "4px", border: "1px solid #cbd5e1" }}
+              />
+              <button 
+                onClick={() => handleGuardarPrecio(prod.id)}
+                style={{ backgroundColor: "#2563eb", color: "white", border: "none", padding: "7px 14px", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}
+              >
+                Actualizar
+              </button>
+              <button 
+                onClick={() => {
+                  if (window.confirm(`¿Estás seguro de eliminar "${prod.nombre}"?`)) {
+                    onEliminarProducto(prod.id);
+                  }
+                }}
+                style={{ backgroundColor: "#ef4444", color: "white", border: "none", padding: "7px 12px", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}
+                title="Eliminar producto"
+              >
+                🗑️
+              </button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))
+      ) : (
+        <p style={{ color: "#666", textAlign: "center" }}>No hay productos cargados para gestionar.</p>
+      )}
     </div>
   );
 }
