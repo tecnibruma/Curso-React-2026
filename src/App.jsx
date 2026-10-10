@@ -10,18 +10,26 @@ function App() {
   const [isAdminLogged, setIsAdminLogged] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
 
-  // Lista de productos cargada dinámicamente desde el backend en Render
   const [listaProductos, setListaProductos] = useState([]);
 
-  // Consultar los productos a la API al cargar la aplicación
   useEffect(() => {
     fetch('https://backend-ecommercetecnibruma.onrender.com/api/productos')
-      .then((res) => res.json())
-      .then((data) => {
-        setListaProductos(data);
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+        return response.json();
       })
-      .catch((error) => {
-        console.error('Error al cargar los productos:', error);
+      .then(data => {
+        if (Array.isArray(data)) {
+          setListaProductos(data);
+        } else {
+          setListaProductos([]);
+        }
+      })
+      .catch(error => {
+        console.error('Error al obtener los productos del backend:', error);
+        setListaProductos([]);
       });
   }, []);
 
@@ -49,13 +57,22 @@ function App() {
   };
 
   const handleAgregarProducto = (nuevoProducto) => {
-    const productoConId = {
-      ...nuevoProducto,
-      id: Date.now(),
-      stock: nuevoProducto.stock || 5
-    };
-    setListaProductos([...listaProductos, productoConId]);
-    alert('¡Producto guardado y publicado con éxito en el catálogo!');
+    fetch('https://backend-ecommercetecnibruma.onrender.com/api/productos', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(nuevoProducto),
+    })
+      .then((response) => response.json())
+      .then((productoGuardado) => {
+        setListaProductos([...listaProductos, productoGuardado]);
+        alert('¡Producto guardado y publicado con éxito en el backend!');
+      })
+      .catch((error) => {
+        console.error('Error al guardar el producto:', error);
+        alert('Hubo un error al intentar guardar el producto en el servidor.');
+      });
   };
 
   // Función para eliminar un producto del catálogo local
@@ -159,7 +176,7 @@ function App() {
 
       {vistaActual === 'cliente' ? (
         <div>
-          {/* GRILLA RESPONSIVE */}
+          {/* GRILLA RESPONSIVE CON PROTECCIÓN DE ARRAY */}
           <div style={{ 
             display: "grid", 
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", 
@@ -186,7 +203,7 @@ function App() {
               ))
             ) : (
               <p style={{ gridColumn: "1 / -1", textAlign: "center", color: "#666", padding: "20px" }}>
-                No hay productos disponibles en este momento.
+                Cargando productos o esperando conexión con el servidor backend...
               </p>
             )}
           </div>
@@ -249,7 +266,7 @@ function App() {
           {!isAdminLogged ? (
             <form onSubmit={handleLogin}>
               <h2>🔐 Área Restringida</h2>
-              <p style={{ color: "#666", marginBottom: "20px", fontSize: "0.9rem" }}>Ingrese la clave de administrador para gestionar precios.</p>
+              <p style={{ color: "#666", marginBottom: "20px", fontSize: "0.9rem" }}>Ingrese la clave de administrador de TecniBruma para gestionar precios.</p>
               
               <input 
                 type="password" 
